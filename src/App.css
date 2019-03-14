@@ -1,0 +1,18 @@
+.container{
+    margin-top:80px
+}
+.userlist{
+    margin-bottom: 20px
+}
+
+.overflow {
+    white-space: nowrap; 
+    width: 100%; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .selected{
+      background-color: antiquewhite;
+      padding: 5px;
+  }
