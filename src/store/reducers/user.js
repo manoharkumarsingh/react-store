@@ -1,12 +1,17 @@
 import {
     USER_SELECTED,
     USER_LIST,
-    ADD_USER
+    ADD_USER,
+    UPDATE_USER
   } from '../actionTypes';
   
   const initialState = {
     users: {},
-    selectedUsers: {},
+    selectedUsers: [{
+        _id : '',
+        title:'',
+        content:''
+    }],
     addedUsers: {},
   }
   export default function(state = initialState, action){
@@ -26,6 +31,11 @@ import {
             ...state,
             addedUsers: action.payload
           };
+        case UPDATE_USER : 
+        return{
+            ...state,
+            addedUsers: action.payload
+        };
 
         default:
             return state; 

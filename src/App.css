@@ -16,3 +16,13 @@
       background-color: antiquewhite;
       padding: 5px;
   }
+
+  .btndetails{
+      padding-bottom: 20px;
+  }
+
+  .userImage{
+    height:100px;
+    width:100px;
+    margin-top: 10px;
+  }

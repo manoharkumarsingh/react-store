@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
-import { ADD_USER} from '../store/actionTypes';
+import { ADD_USER,UPDATE_USER} from '../store/actionTypes';
 import { userModule} from '../api/api';
 import { alertmesage} from '../store/alertmessage';
 
@@ -8,20 +8,65 @@ class Adduser extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            _id :  '',
             title : '',
-            body : '',
-            userId : 1
+            content : '',
+            file : '../assets/image/dummy.jpg'
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmitForm =  this.handleSubmitForm.bind(this);
+        this.handleUpdateUser =  this.handleUpdateUser.bind(this);
+        this.handleChangeImage = this.handleChangeImage.bind(this);
         this.alertMessage = '';
     }
     handleChange(event) {
         this.setState({
             title : this.refs.title.value,
-            body : this.refs.body.value,
-            userId : 1
-        });
+            content : this.refs.body.value
+        });      
+    }
+
+    handleChangeImage(event){
+      this.setState({file: URL.createObjectURL(event.target.files[0])})
+    }
+
+    async componentWillMount() {
+        if(this.props.location.state){
+            this.setState({
+                _id :  this.props.location.state ? this.props.location.state.user : '',
+                title : this.props.selecteduser[0]['title'] ? this.props.selecteduser[0]['title'] : '',
+                content : this.props.selecteduser[0]['content'] ? this.props.selecteduser[0]['content'] : ''
+            });
+        }
+     }
+
+     async handleDeleteUser(userid){ 
+        await userModule.deleteUser(userid)
+        await this.props.allUser()
+      }
+    
+    componentWillReceiveProps(props) {    
+        if(!props.location.state){
+            this.setState({
+                _id :  '',
+                title : '',
+                content : ''
+            });
+        }
+    }
+
+    async handleUpdateUser(){
+        await this.props.updateuser(this.state);
+        if( this.props.addeduser){
+           alertmesage.createNotification("success","User "+this.props.addeduser.data.title+" Updated")
+         this.setState({
+             title : '',
+             content : ''
+           });
+         this.props.history.push("/");
+       }else{
+           alertmesage.createNotification("error","OOPS something went wrong !")
+       }
     }
    
     async handleSubmitForm(event){
@@ -29,11 +74,10 @@ class Adduser extends Component {
        await this.props.adduser(this.state)
        var status = this.props.addeduser.status;
        alertmesage.createNotification(status,"User "+this.props.addeduser.data.title+" created ")
-       if(status === 201){
+       if( this.props.addeduser){
         this.setState({
             title : '',
-            body : '',
-            userId : 1
+            content : ''
           });
         this.props.history.push("/");
       }
@@ -47,16 +91,36 @@ class Adduser extends Component {
                <div className="col-md-2"></div>
                <div className="col-md-8 well">
                     <form onSubmit={this.handleSubmitForm}>
-                        <input type="hidden" className="form-control" id="userid" value="1" name="userid"/>
                         <div className="form-group">
                             <label htmlFor="title">Title</label>
                             <input type="text" className="form-control" value={this.state.title} onChange={this.handleChange} ref="title"/>
                         </div>
                         <div className="form-group">
                             <label htmlFor="body">Body</label>
-                            <input type="text" className="form-control" value={this.state.body} onChange={this.handleChange} ref="body"/>
+                            <input type="text" className="form-control" value={this.state.content} onChange={this.handleChange} ref="body"/>
                         </div>
-                        <button type="button" onClick={this.handleSubmitForm} className="btn btn-primary">Submit</button>
+                        
+                        <div className="form-group">
+                          <img src={this.state.file} className="img-circle userImage"  />
+                          <input type="file" onChange={this.handleChangeImage} ref="img" />
+                         
+                        </div>
+                        
+                        <div className='row'>
+                           <div className="col-md-4"></div>
+                           {
+                               this.state._id !== '' ?  
+                               <div className="col-md-4">
+                                    <button type="button" onClick={this.handleUpdateUser} className="btn btn-primary pull-right">Update</button>
+                               </div> 
+                                :  
+                              <div className="col-md-4"> 
+                                 <button type="button" onClick={this.handleSubmitForm} className="btn btn-primary">Submit</button>
+                              </div>
+                           }
+                           <div className="col-md-4"></div>
+                           
+                        </div>
                     </form>
                 </div>
                 <div className="col-md-2"></div>
@@ -68,13 +132,19 @@ class Adduser extends Component {
 
 function mapStateToProps(state){
     return {
-        addeduser:state.User.addedUsers
+        addeduser:state.User.addedUsers,
+        selecteduser:state.User.selectedUsers
     }
 }
 const  mapDispatchToProps = dispatch => ({
     adduser: async (userdetails) =>  dispatch({
         type: ADD_USER, 
         payload: await userModule.addUser(userdetails)
+    }),
+
+    updateuser: async (userdetails) =>  dispatch({
+        type: UPDATE_USER, 
+        payload: await userModule.updateUser(userdetails)
     })
   });
 

@@ -25,7 +25,6 @@ class Alertmessage extends Component {
   render() {
     return (
       <div>
-
         <NotificationContainer/>
       </div>
     );

@@ -18,6 +18,22 @@ const ApiService = {
             return response
           })
         .catch(err => console.log(err))
+    },
+
+
+    put( apiurl,bodyFormData) {
+        return axios.put(apiurl,bodyFormData)
+        .then(response => {
+            return response
+          })
+        .catch(err => console.log(err))
+    },
+    delete( apiurl,bodyFormData) {
+        return axios.delete(apiurl)
+        .then(response => {
+            return response
+          })
+        .catch(err => console.log(err))
     }
 }
   export default ApiService
@@ -26,13 +42,21 @@ const ApiService = {
 
 export const userModule = {
   getUser() {
-    return ApiService.get( 'http://jsonplaceholder.typicode.com/posts/' )
+    return ApiService.get( 'http://localhost:4600/posts/' )
   },
   selectedUser(user) {
-    return ApiService.get( 'http://jsonplaceholder.typicode.com/posts/'+user)
+    return ApiService.get( 'http://localhost:4600/posts/'+user)
   },
 
   addUser(user) {
-    return ApiService.post( 'http://jsonplaceholder.typicode.com/posts/',user)
+    return ApiService.post( 'http://localhost:4600/posts/',user)
+  },
+
+  updateUser(user) {
+    return ApiService.put( 'http://localhost:4600/posts/'+user['_id'],user)
+  },
+
+  deleteUser(user) {
+    return ApiService.delete( 'http://localhost:4600/posts/'+user)
   }
 }
