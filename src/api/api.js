@@ -60,3 +60,10 @@ export const userModule = {
     return ApiService.delete( 'http://localhost:4600/posts/'+user)
   }
 }
+
+export const commentModule = {
+    commentUser(user,comment) {
+        return ApiService.post( 'http://localhost:4600/posts/'+user+'/comment',comment)
+      }
+  
+  }
