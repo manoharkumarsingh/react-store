@@ -100,11 +100,10 @@ class Adduser extends Component {
                             <input type="text" className="form-control" value={this.state.content} onChange={this.handleChange} ref="body"/>
                         </div>
                         
-                        <div className="form-group">
+                        {/* <div className="form-group">
                           <img src={this.state.file} className="img-circle userImage"  />
                           <input type="file" onChange={this.handleChangeImage} ref="img" />
-                         
-                        </div>
+                        </div> */}
                         
                         <div className='row'>
                            <div className="col-md-4"></div>

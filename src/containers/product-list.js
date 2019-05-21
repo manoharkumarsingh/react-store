@@ -18,33 +18,17 @@ class ProductList extends Component {
       await this.props.allUser()
     }
 
+   
     async componentWillMount() {
         await this.props.allUser()
      }
-     componentDidMount() {
-        
-     }
-     componentWillReceiveProps(newProps) {    
-        
-     }
-     shouldComponentUpdate(newProps, newState) {
-        return true;
-     }
-     componentWillUpdate(nextProps, nextState) {
-      
-     }
-     componentDidUpdate(prevProps, prevState) {
-       
-     }
-     componentWillUnmount() {
-        
-     }
    
     render(){
-        var users = Object.values(this.props.users)
-        if (!this.props.users.lenght === 0) {
+    
+        if (!this.props.users) {
             return "No User Found";
         }
+        var users = Object.values(this.props.users)
         return (
             <div className="userList row">
             {
@@ -61,16 +45,15 @@ class ProductList extends Component {
                             </div>
                             <div className="row btndetails">
                                 <div className="col-md-6">
-                                   <button className="btn btn-primary pull-right">
-                                    <Link 
+                                    <Link className="glyphicon glyphicon-home btn btn-primary pull-right" data-toggle="tooltip" data-placement="bottom" title="View details"
                                         to={{pathname :`/userdeatils/${user._id}`,
-                                            state :{user:user._id}}}> View
+                                            state :{user:user._id}}}>
                                     </Link>
-                                    </button>
                                 </div>
                                 <div className="col-md-6">
-                                     <button className="btn btn-danger" onClick={()=>this.handleDeleteUser(user._id)}>Delete</button>
+                                     <button className="btn btn-danger glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete user" onClick={()=>this.handleDeleteUser(user._id)}></button>
                                 </div>
+
                             </div>
                            
                             
