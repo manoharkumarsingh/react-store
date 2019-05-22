@@ -65,11 +65,14 @@ export const commentModule = {
     commentUser(user,comment) {
         return ApiService.post( 'http://localhost:4600/posts/'+user+'/comment',comment)
       },
-      getComments(user){
+    getComments(user){
         return ApiService.get( 'http://localhost:4600/posts/'+user+'/comment')
     },
     deleteComment(comment){
         return ApiService.delete( 'http://localhost:4600/posts/comment/'+comment)
+    },
+    updateComment(comment,data){
+        return ApiService.put( 'http://localhost:4600/posts/comment/'+comment,data)
     }
   
   }

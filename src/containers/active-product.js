@@ -13,11 +13,14 @@ class ProductDetail extends Component {
             content : {
                 content:''
             },
-            requiredContent:''
+            requiredContent:'',
+            comment:'',
+            id:''
         }
         this.handleComment =  this.handleComment.bind(this);
         this.handleChange =  this.handleChange.bind(this);
         this.handleDeleteComment = this.handleDeleteComment.bind(this);
+        this.handleEditComment = this.handleEditComment.bind(this);
         
     }
 
@@ -28,6 +31,31 @@ class ProductDetail extends Component {
         }); 
     }
 
+    async handleEditComment(commentid,comment){
+ 
+        this.setState({
+            content : {content: comment},
+            id:commentid
+        }); 
+    }
+
+    async handleUpdateComment(userid){
+        if(this.state.content["content"]){
+            await commentModule.updateComment(this.state.id,this.state.content)
+            window.$('#myModal').modal('hide');
+            alertmesage.createNotification("success","Commented !")
+            await this.props.comments(userid)
+        }else{
+            this.setState({
+                requiredContent : 'Comment is required *'
+            });  
+        }
+        this.setState({
+            content : {content: ''},
+            id : ''
+        });
+    }
+  
     async handleComment(userid){ 
         if(this.state.content["content"]){
             await this.props.commentUser(userid,this.state.content)
@@ -40,7 +68,8 @@ class ProductDetail extends Component {
             });  
         }
         this.setState({
-            content : {content: ''}
+            content : {content: ''},
+            id : ''
         }); 
     }
     async componentWillMount() {
@@ -71,7 +100,7 @@ class ProductDetail extends Component {
                               </div>
                               <div className="col-md-10"> {comment.content} </div>
                               <div className="col-md-1"><span className="glyphicon glyphicon-trash pointer" onClick={()=>this.handleDeleteComment(comment._id)}></span> <span className="verticle"></span> 
-                              <span className="glyphicon glyphicon-pencil pointer"> </span></div>
+                              <span className="glyphicon glyphicon-pencil pointer" onClick={()=>this.handleEditComment(comment._id,comment.content)} data-toggle="modal" data-target="#myModal"> </span></div>
                             </div> 
                             <hr></hr>
                           </div>
@@ -103,7 +132,13 @@ class ProductDetail extends Component {
                 </div>
                 <div className="modal-footer">
                     <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" className="btn btn-primary" onClick={()=>this.handleComment(this.props.user[0]['_id'])}>Save changes</button>
+                    {!this.state.id ?  
+                        <button type="button" className="btn btn-primary" onClick={()=>this.handleComment(this.props.user[0]['_id'])}>Save changes</button> 
+                        :
+                        <button type="button" className="btn btn-primary" onClick={()=>this.handleUpdateComment(this.props.user[0]['_id'])}>Update</button>
+                   }
+                   
+                   
                 </div>
                 </div>
             </div>
@@ -144,12 +179,12 @@ class ProductDetail extends Component {
                     </div>
                     <div align="center" style={{color: 'gray'}}><h3>Comments</h3></div>
                     <hr></hr>
-                    {/* comments */}
+                    {/* comments Dispaly*/}
                       {
                           this.commentDisplay()
                          
                       }
-                    {/* Modal */}
+                    {/* Modal Display */}
                       { this.commentModal()}
         
                 </div>
